@@ -3,7 +3,7 @@
 _pkgname="wechat"
 pkgname="${_pkgname}-bin"
 pkgver=4.0.0.30
-pkgrel=1
+pkgrel=2
 pkgdesc="Wechat from tencent | 微信官方版"
 arch=("x86_64" "aarch64" "loong64")
 url="https://linux.weixin.qq.com"
@@ -11,8 +11,9 @@ license=("proprietary")
 provides=("${_pkgname}")
 conflicts=("${_pkgname}" "${_pkgname}-universal")
 replaces=("${_pkgname}-universal" "${_pkgname}-universal-privilege")
-depends=(at-spi2-core jack libpulse libxcomposite libxdamage libxkbcommon-x11 libxrandr mesa nss pango xcb-util xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm)
+depends=(at-spi2-core jack libpulse libxcomposite libxdamage libxkbcommon-x11 libxrandr mesa nss pango xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm)
 makedepends=("patchelf")
+optdepends=("noto-fonts-cjk: Chinese font support" "noto-fonts-emoji: emoji support")
 source_x86_64=("${_pkgname}-${pkgver}-x86_64.deb::https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_x86_64.deb")
 source_aarch64=("${_pkgname}-${pkgver}-aarch64.deb::https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_arm64.deb")
 source_loong64=("${_pkgname}-${pkgver}-loong64.deb::https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_LoongArch.deb")
@@ -24,10 +25,12 @@ options=("!strip")
 
 prepare() {
     bsdtar -xOf "${_pkgname}-${pkgver}-${CARCH}.deb" ./data.tar.xz | xz -cdT0 | tar -x .
+    rm -rf usr/share/doc
     patchelf --set-rpath '$ORIGIN' "opt/${_pkgname}/libwxtrans.so"
     find "opt/${_pkgname}/vlc_plugins" -type f | xargs -I {} patchelf --set-rpath '$ORIGIN:$ORIGIN/../..' {}
     sed -e "s|^Icon=.*|Icon=${_pkgname}|" \
         -e "s|^Categories=.*|Categories=Network;InstantMessaging;Chat;|" \
+        -e "s|^Exec=.*|Exec=env 'QT_QPA_PLATFORM=wayland;xcb' /usr/bin/wechat %U|" \
         -i "usr/share/applications/${_pkgname}.desktop"
 }
 
