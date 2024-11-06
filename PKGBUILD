@@ -1,11 +1,10 @@
 # Maintainer: devome <evinedeng@hotmail.com>
 
 _pkgname="wechat"
-_oriname="com.tencent.${_pkgname}"
 pkgname="${_pkgname}-bin"
 pkgver=4.0.0.30
 pkgrel=1
-pkgdesc="Wechat from tencent"
+pkgdesc="Wechat from tencent | 微信官方版"
 arch=("x86_64" "aarch64" "loong64")
 url="https://linux.weixin.qq.com"
 license=("proprietary")
