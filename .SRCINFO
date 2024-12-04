@@ -51,4 +51,3 @@ pkgbase = wechat-bin
 	sha256sums_loong64 = 3f9ac4e84b345a4d1dc76af01328619d7debea1b3d49d7138f3f7534d8989a99
 
 pkgname = wechat-bin
-	depends_loong64 = liblol

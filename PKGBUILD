@@ -38,9 +38,6 @@ prepare() {
 }
 
 package() {
-    if [[ ${CARCH} == loong64 ]]; then
-        depends_loong64+=(liblol)
-    fi
     mv {opt,usr} "${pkgdir}"
     ln -s "/opt/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
     install -Dm644 LICENSE-* -t "${pkgdir}/usr/share/licenses/${pkgname}"
