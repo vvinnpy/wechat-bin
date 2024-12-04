@@ -2,3 +2,5 @@
 /src
 *.pkg.tar.*
 *.deb
+*.html
+geninfo.sh
