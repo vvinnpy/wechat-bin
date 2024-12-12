@@ -2,39 +2,55 @@
 
 _pkgname="wechat"
 pkgname="${_pkgname}-bin"
-pkgver=4.0.0.30
-pkgrel=2
-pkgdesc="Wechat from tencent | 微信官方版"
+pkgver=4.0.1.7
+pkgrel=1
+pkgdesc="WeChat from Tencent | 微信官方版"
 arch=("x86_64" "aarch64" "loong64")
 url="https://linux.weixin.qq.com"
-license=("proprietary")
-provides=("${_pkgname}")
-conflicts=("${_pkgname}" "${_pkgname}-universal")
-replaces=("${_pkgname}-universal" "${_pkgname}-universal-privilege")
+license=("custom:Software License and Service of Tencent Weixin")
+provides=("${_pkgname}"{,-universal})
+conflicts=("${_pkgname}"{,-universal})
+replaces=("${_pkgname}-universal"{,-privilege})
 depends=(at-spi2-core jack libpulse libxcomposite libxdamage libxkbcommon-x11 libxrandr mesa nss pango xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm)
-makedepends=("patchelf")
-optdepends=("noto-fonts-cjk: Chinese font support" "noto-fonts-emoji: emoji support")
-source_x86_64=("${_pkgname}-${pkgver}-x86_64.deb::https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_x86_64.deb")
-source_aarch64=("${_pkgname}-${pkgver}-aarch64.deb::https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_arm64.deb")
-source_loong64=("${_pkgname}-${pkgver}-loong64.deb::https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_LoongArch.deb")
-sha256sums_x86_64=('0e2834310e1d321da841a4cde9c657d9c086c5ee8c82d09e47eab53629a5038f')
-sha256sums_aarch64=('dd1f5029bb20274dd7903a0c5bf7796e1392262e048ce88265530a88328d72ec')
-sha256sums_loong64=('5017543b0fe8ad28bf862deec92c4a7faefa7b95bba205f20107a15c6a5a2098')
+optdepends=("noto-fonts-cjk: Chinese font support"
+            "noto-fonts-emoji: emoji support")
+source=("LICENSE-zh_CN.html::https://weixin.qq.com/agreement?lang=zh_CN"
+        "LICENSE-zh_HK.html::https://weixin.qq.com/agreement?lang=zh_HK"
+        "LICENSE-zh_TW.html::https://weixin.qq.com/agreement?lang=zh_TW"
+        "LICENSE-en.html::https://www.wechat.com/mobile/en/service_terms.html")
+source_x86_64=("${_pkgname}-${pkgver}-x86_64.deb::https://home-store-packages.uniontech.com/appstore/pool/appstore/c/com.tencent.${_pkgname}/com.tencent.${_pkgname}_${pkgver}_amd64.deb")
+source_aarch64=("${_pkgname}-${pkgver}-aarch64.deb::https://home-store-packages.uniontech.com/appstore/pool/appstore/c/com.tencent.${_pkgname}/com.tencent.${_pkgname}_${pkgver}_arm64.deb")
+source_loong64=("${_pkgname}-${pkgver}-loong64.deb::https://home-store-packages.uniontech.com/appstore/pool/appstore/c/com.tencent.${_pkgname}/com.tencent.${_pkgname}_${pkgver}_loongarch64.deb")
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
+sha256sums_x86_64=('bfd5a2a320280148ff35f7a9d36d1ba98f4a685f41df2518fbb10f7636df3bb2')
+sha256sums_aarch64=('403fbcc7cb2cd55546e018a8b6e6685aca734c9019b2bdcc09c19b6608e6385e')
+sha256sums_loong64=('33eabe2abfd467699d857aa9807fd73c17f058c8d547fdc3141ee078ea68adca')
 noextract=("${_pkgname}-${pkgver}-"{x86_64,aarch64,loong64}.deb)
 options=("!strip")
 
 prepare() {
-    bsdtar -xOf "${_pkgname}-${pkgver}-${CARCH}.deb" ./data.tar.xz | xz -cdT0 | tar -x .
-    rm -rf usr/share/doc
-    patchelf --set-rpath '$ORIGIN' "opt/${_pkgname}/libwxtrans.so"
-    find "opt/${_pkgname}/vlc_plugins" -type f | xargs -I {} patchelf --set-rpath '$ORIGIN:$ORIGIN/../..' {}
+    bsdtar -xOf "${_pkgname}-${pkgver}-${CARCH}.deb" data.tar.xz | bsdtar -xmf- --strip-components 4 --exclude "opt/apps/com.tencent.${_pkgname}/info" "opt/apps/com.tencent.${_pkgname}"
+    mv "files" "${_pkgname}"
+    while read file; do
+        if [[ $(file -b "$file") != "ELF "* ]]; then
+            chmod -x "$file"
+        fi
+    done <<< "$(find "${_pkgname}" -type f)"
+        
     sed -e "s|^Icon=.*|Icon=${_pkgname}|" \
         -e "s|^Categories=.*|Categories=Network;InstantMessaging;Chat;|" \
-        -e "s|^Exec=.*|Exec=env 'QT_QPA_PLATFORM=wayland;xcb' /usr/bin/wechat %U|" \
-        -i "usr/share/applications/${_pkgname}.desktop"
+        -e "s|^Exec=.*|Exec=env 'QT_QPA_PLATFORM=wayland;xcb' QT_AUTO_SCREEN_SCALE_FACTOR=1 /usr/bin/${_pkgname} %U|" \
+        "entries/applications/com.tencent.${_pkgname}.desktop" > "${_pkgname}.desktop"
 }
 
 package() {
-    mv {opt,usr} "${pkgdir}"
+    install -Dm644 LICENSE-*          -t "${pkgdir}/usr/share/licenses/${pkgname}"
+    install -Dm644 "${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+    install -dm755 "${pkgdir}/usr/bin"   "${pkgdir}/opt"
+    mv "${_pkgname}"                     "${pkgdir}/opt/${_pkgname}"
     ln -s "/opt/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+    for res in 16 32 48 64 128 256; do
+        local _png="entries/icons/hicolor/${res}x${res}/apps/com.tencent.${_pkgname}.png"
+        install -Dm644 "$_png"           "${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps/${_pkgname}.png"
+    done
 }
