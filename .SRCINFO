@@ -41,11 +41,11 @@ pkgbase = wechat-bin
 	sha256sums = SKIP
 	sha256sums = SKIP
 	sha256sums = SKIP
-	source_x86_64 = wechat-4.0.1.7-x86_64.deb::https://home-store-packages.uniontech.com/appstore/pool/appstore/c/com.tencent.wechat/com.tencent.wechat_4.0.1.7_amd64.deb
-	sha256sums_x86_64 = bfd5a2a320280148ff35f7a9d36d1ba98f4a685f41df2518fbb10f7636df3bb2
-	source_aarch64 = wechat-4.0.1.7-aarch64.deb::https://home-store-packages.uniontech.com/appstore/pool/appstore/c/com.tencent.wechat/com.tencent.wechat_4.0.1.7_arm64.deb
-	sha256sums_aarch64 = 403fbcc7cb2cd55546e018a8b6e6685aca734c9019b2bdcc09c19b6608e6385e
-	source_loong64 = wechat-4.0.1.7-loong64.deb::https://home-store-packages.uniontech.com/appstore/pool/appstore/c/com.tencent.wechat/com.tencent.wechat_4.0.1.7_loongarch64.deb
-	sha256sums_loong64 = 33eabe2abfd467699d857aa9807fd73c17f058c8d547fdc3141ee078ea68adca
+	source_x86_64 = wechat-4.0.1.7-x86_64.deb::https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_x86_64.deb
+	sha256sums_x86_64 = SKIP
+	source_aarch64 = wechat-4.0.1.7-aarch64.deb::https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_arm64.deb
+	sha256sums_aarch64 = SKIP
+	source_loong64 = wechat-4.0.1.7-loong64.deb::https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_LoongArch.deb
+	sha256sums_loong64 = SKIP
 
 pkgname = wechat-bin
