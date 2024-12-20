@@ -1,4 +1,4 @@
-# Maintainer: devome <evinedeng@hotmail.com>
+# Maintainer: wimpy <vvinn.py@gmail.com>
 
 _pkgname="wechat"
 pkgname="${_pkgname}-bin"
