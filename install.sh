@@ -30,10 +30,9 @@ get_latest() {
       tar -xO ./control |
       sed -n 's/^Version: \+\(.\+\)$/\1/p'
   )
-  sha256sum_deb=$(sha256sum "${name_temp}")
-  hash="${sha256sum_deb::64}"
-
+  hash=$(sha256sum "${name_temp}" | cut -d ' ' -f1)
   name="${name_prefix}${version}-${arch}.deb"
+  
   mv "$name_temp" "$name"
 
   echo "pkgver=${version}"
@@ -49,10 +48,10 @@ install() {
   if [ $(vercmp "${version}" "${version_current}") == 1 ]; then
     sed -i "s/pkgver=${version_current}/pkgver=${version}/g" "${PWD}/PKGBUILD"
     sed -i "s#source_${arch}=\(.*\)#source_${arch}=(\${_pkgname}-\${pkgver}-x86_64.deb::file://$PWD/$name)#" "${PWD}/PKGBUILD"
-    echo "install: [$version_current]"
+    echo "install: [$version]"
     makepkg -si --skipinteg
   else
-    echo "[$version_current] is the latest version"
+    echo "[$version_current] Wechat is up to date"
   fi
 }
 
