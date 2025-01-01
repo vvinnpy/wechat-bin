@@ -1,11 +1,6 @@
-## 安装
-### 1. 手动安装
-```shell
-git clone https://gitee.com/evine/wechat-bin.git
-cd wechat-bin
-makepkg -si
-```
-### 2. 使用 paru
+## 安装与升级
+
+### 1. （推荐）使用 paru
 - 复制 `/etc/paru.conf` 到 `$XDG_CONFIG_HOME/paru/paru.conf` ( 默认为 `$HOME/.config/paru/paru.conf` )
 - 添加 PKGBUILD 仓库
   ```properties
@@ -30,7 +25,15 @@ makepkg -si
   ```
 - PKGBUILD 仓库优先级高于 AUR, 可使用 paru 正常升级
 
-## 升级
+### 2. 手动安装
+
+```shell
+git clone https://gitee.com/evine/wechat-bin.git
+cd wechat-bin
+makepkg -si
+```
+
+未来升级时：
 
 ```shell
 cd wechat-bin
