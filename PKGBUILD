@@ -2,7 +2,7 @@
 # Maintainer: devome <evinedeng@hotmail.com>
 
 _pkgname="wechat"
-pkgname="${_pkgname}-bin"
+pkgname="${PACKAGE_NAME:-${_pkgname}-bin}"
 pkgver=4.0.1.11
 pkgrel=1
 pkgdesc="WeChat from Tencent | 微信官方版"
